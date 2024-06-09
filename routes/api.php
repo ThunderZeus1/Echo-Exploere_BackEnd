@@ -11,7 +11,7 @@ Route::post('/Register',[
     \App\Http\Controllers\Authentication\Authcontroller::class,
     'CreateUser'
 ]);
-Route::get('/Login',[
+Route::post('/Login',[
     \App\Http\Controllers\Authentication\Authcontroller::class,
     'LoginUser'
 ]);

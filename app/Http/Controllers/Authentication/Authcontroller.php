@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Authentication;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class Authcontroller extends Controller
 {
@@ -12,7 +13,7 @@ class Authcontroller extends Controller
     {
         return rescue(function () use ($request){
             $request->validate([
-                'name'=>'String|required',
+                'name'=>'String|required|unique:users',
                 'email'=>'email|required|unique:users',
                 'password'=>'String|required|min:8',
             ]);
@@ -33,21 +34,27 @@ class Authcontroller extends Controller
         }
         );
     }
-    public function LoginUser()
+    public function LoginUser(Request $request)
     {
-        return rescue(function (){
-            return response([
-               'status'=>'true',
-               'payload'=> auth()->user(),
-            ],200);
-        },function (\Exception $exception){
+        $name = $request->input('name');
+        $password = $request->input('password');
+
+        $user = User::where('name',$name)->first();
+
+        if ($user && Hash::check($password, $user->password)){
             return response()->json([
-                'status'=>'false',
-                'payload'=>[
-                    'message'=>$exception->getMessage(),
-                ]
-            ]);
+                'message' => 'Login successful', 'user' => $user
+            ], 200);
+        }else
+        {
+            return response()->json([
+                'message' => 'Invalid credentials'
+            ], 500);
         }
-        );
+    }
+    public function UserCount(){
+        //get the user count
+        $userCount = User::count();
+        return view('dashboard', compact('userCount'));
     }
 }

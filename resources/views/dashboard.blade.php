@@ -31,7 +31,7 @@
                     <!-- User Count Section -->
                     <div class="bg-white text-gray-800 rounded-lg shadow-md p-6 transform transition duration-500 hover:scale-105">
                         <h3 class="text-lg font-semibold mb-4">User Count</h3>
-                        <p class="text-gray-600 mt-2">Total Users: <span class="text-xl font-semibold text-blue-500">500</span></p>
+                        <p class="text-gray-600 mt-2">Total Users: <span class="text-xl font-semibold text-blue-500">{{ $userCount }}</span></p>
                         <p class="text-sm text-gray-500 mt-4 font-semibold">Manage users and their activity</p>
                     </div>
 
