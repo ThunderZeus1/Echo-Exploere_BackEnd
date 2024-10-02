@@ -11,6 +11,7 @@ class TourismCompany extends Model
 
     protected $fillable = ['name'];
 
+    // Define the relationship to tour packages
     public function packages()
     {
         return $this->hasMany(TourPackage::class);

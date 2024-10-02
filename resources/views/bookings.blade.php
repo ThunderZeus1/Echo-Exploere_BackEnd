@@ -15,7 +15,31 @@
                 <h3 class="text-2xl font-extrabold text-gray-900 mb-6">Add New Booking</h3>
                 <form action="{{ route('bookings.store') }}" method="POST" class="mb-8">
                     @csrf
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Tourism Company Dropdown -->
+                    <div>
+                        <label for="company_id" class="block text-gray-700 font-semibold">Tourism Company</label>
+                        <select name="company_id" id="company_id" class="form-select mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:ring-indigo-500 focus:border-indigo-500" required>
+                            <option value="">Select a Company</option>
+                            @foreach($companies as $company)
+                                <option value="{{ $company->id }}">{{ $company->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Packages and Prices (will be dynamically populated) -->
+                    <div id="packagesSection" class="mt-6">
+                        <label for="package_id" class="block text-gray-700 font-semibold">Tour Package</label>
+                        <select name="package_id" id="package_id" class="form-select mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:ring-indigo-500 focus:border-indigo-500" required>
+                            <option value="">Select a Package</option>
+                        </select>
+
+                        <label for="package_price" class="block text-gray-700 font-semibold mt-4">Price (LKR)</label>
+                        <input type="text" name="package_price" id="package_price" class="form-input mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:ring-indigo-500 focus:border-indigo-500" readonly>
+                    </div>
+
+                    <!-- Other Fields (Customer Name, Date, Amount, etc.) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                         <div>
                             <label for="customer_name" class="block text-gray-700 font-semibold">Customer Name</label>
                             <input type="text" name="customer_name" id="customer_name" class="form-input mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:ring-indigo-500 focus:border-indigo-500" required>
@@ -29,11 +53,6 @@
                         <div>
                             <label for="date" class="block text-gray-700 font-semibold">Date</label>
                             <input type="date" name="date" id="date" class="form-input mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:ring-indigo-500 focus:border-indigo-500" required>
-                        </div>
-
-                        <div>
-                            <label for="amount" class="block text-gray-700 font-semibold">Amount (LKR)</label>
-                            <input type="number" name="amount" id="amount" step="0.01" class="form-input mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:ring-indigo-500 focus:border-indigo-500" required>
                         </div>
 
                         <div>
@@ -68,7 +87,6 @@
                     </tr>
                     </thead>
                     <tbody class="text-gray-700">
-                    <!-- Display bookings dynamically -->
                     @foreach ($bookings as $booking)
                         <tr class="border-b hover:bg-indigo-50 transition duration-200">
                             <td class="px-4 py-3">{{ $booking->customer_name }}</td>
@@ -85,53 +103,36 @@
                     </tbody>
                 </table>
 
-                <!-- Chart.js canvas for booking trends -->
-                <div class="mt-8">
-                    <canvas id="bookingsChart"></canvas>
-                </div>
-
-                <p class="text-gray-600 mt-4">Manage and view recent bookings.</p>
             </div>
         </div>
     </div>
 
-    <!-- Chart.js scripts for Bookings Chart -->
+    <!-- AJAX Script to Load Packages Based on Company Selection -->
     <script>
-        const bookingsCtx = document.getElementById('bookingsChart').getContext('2d');
-        const bookingsChart = new Chart(bookingsCtx, {
-            type: 'line',
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June'], // Example months
-                datasets: [{
-                    label: 'Number of Bookings',
-                    data: [50, 75, 90, 110, 85, 100], // Manual example values for bookings
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 20 // Manual step size for y-axis
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            font: {
-                                size: 14
-                            }
-                        }
-                    }
-                }
+        document.getElementById('company_id').addEventListener('change', function() {
+            const companyId = this.value;
+
+            if (companyId) {
+                fetch(`/api/tourism-packages/${companyId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const packageSelect = document.getElementById('package_id');
+                        packageSelect.innerHTML = '<option value="">Select a Package</option>';
+
+                        data.packages.forEach(pkg => {
+                            const option = document.createElement('option');
+                            option.value = pkg.id;
+                            option.textContent = `${pkg.name} (LKR ${pkg.price})`;
+                            packageSelect.appendChild(option);
+                        });
+                    });
             }
+        });
+
+        document.getElementById('package_id').addEventListener('change', function() {
+            const selectedPackage = this.selectedOptions[0].textContent;
+            const price = selectedPackage.match(/LKR\s([0-9,]+)/)[1];
+            document.getElementById('package_price').value = price.replace(/,/g, '');
         });
     </script>
 </x-app-layout>

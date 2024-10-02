@@ -1,6 +1,5 @@
 <?php
 
-// Booking.php (Model)
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,5 +9,8 @@ class Booking extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['customer_name', 'tour_name', 'date', 'status', 'amount'];
+    // Define fillable fields for mass assignment
+    protected $fillable = [
+        'company_id', 'package_id', 'customer_name', 'tour_name', 'date', 'status', 'amount'
+    ];
 }

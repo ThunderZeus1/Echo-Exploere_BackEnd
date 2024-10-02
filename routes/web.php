@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookingController;
-use App\Http\Controllers\TourismController; // For managing tourism companies and packages
+use App\Http\Controllers\TourismController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\UserController;
@@ -23,6 +23,7 @@ Route::middleware([
 
     // Bookings Routes
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store'); // Add this line
 
     // Other Routes
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
@@ -48,8 +49,8 @@ Route::middleware([
     Route::put('/tours/package/{package}', [TourismController::class, 'updatePackage'])->name('tours.package.update');
     Route::delete('/tours/package/{package}', [TourismController::class, 'deletePackage'])->name('tours.package.delete');
 
-
+    // Companies
     Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index');
-
+    Route::get('/api/tourism-packages/{company}', [TourismController::class, 'getPackagesByCompany']);
 
 });
