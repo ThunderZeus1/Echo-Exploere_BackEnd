@@ -15,11 +15,28 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    <!-- Add new navigation links here -->
+                    <x-nav-link href="{{ route('bookings.index') }}" :active="request()->routeIs('bookings.index')">
+                        {{ __('Bookings') }}
+                    </x-nav-link>
+
+                    <x-nav-link href="{{ route('tours.index') }}" :active="request()->routeIs('tours.index')">
+                        {{ __('Tours') }}
+                    </x-nav-link>
+
+                    <x-nav-link href="{{ route('analytics.index') }}" :active="request()->routeIs('analytics.index')">
+                        {{ __('Analytics') }}
+                    </x-nav-link>
+
+                    <x-nav-link href="{{ route('support.index') }}" :active="request()->routeIs('support.index')">
+                        {{ __('Support') }}
+                    </x-nav-link>
                 </div>
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <!-- Teams Dropdown -->
+                <!-- Teams Dropdown (if applicable) -->
                 @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
                     <div class="ms-3 relative">
                         <x-dropdown align="right" width="60">
@@ -115,7 +132,7 @@
                                 @csrf
 
                                 <x-dropdown-link href="{{ route('logout') }}"
-                                         @click.prevent="$root.submit();">
+                                                 @click.prevent="$root.submit();">
                                     {{ __('Log Out') }}
                                 </x-dropdown-link>
                             </form>
@@ -124,7 +141,7 @@
                 </div>
             </div>
 
-            <!-- Hamburger -->
+            <!-- Hamburger Menu for Mobile -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -141,6 +158,22 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{ route('bookings.index') }}" :active="request()->routeIs('bookings.index')">
+                {{ __('Bookings') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{ route('tours.index') }}" :active="request()->routeIs('tours.index')">
+                {{ __('Tours') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{ route('analytics.index') }}" :active="request()->routeIs('analytics.index')">
+                {{ __('Analytics') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{ route('support.index') }}" :active="request()->routeIs('support.index')">
+                {{ __('Support') }}
             </x-responsive-nav-link>
         </div>
 
@@ -176,7 +209,7 @@
                     @csrf
 
                     <x-responsive-nav-link href="{{ route('logout') }}"
-                                   @click.prevent="$root.submit();">
+                                           @click.prevent="$root.submit();">
                         {{ __('Log Out') }}
                     </x-responsive-nav-link>
                 </form>
